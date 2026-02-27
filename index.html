@@ -1,0 +1,894 @@
+Deployed this to might get hub repository create a new repository called Texas Roofing Investment ROI
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Texas Star Roofing × STG</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700&display=swap');
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --gold:#D4A017;--red:#E74C3C;--red-dim:#C0392B;
+  --green:#27AE60;--green-dim:#1A6B3C;
+  --dark:#0A0A0A;--charcoal:#141414;--mid:#1E1E1E;
+  --border:rgba(255,255,255,0.08);--text:#E8E4DC;
+  --muted:rgba(255,255,255,0.38);--faint:rgba(255,255,255,0.10);
+  --tx-red:#CC2222;--tx-blue:#002868;
+}
+html,body{width:100%;height:100%;background:var(--dark);color:var(--text);
+  font-family:'DM Sans',sans-serif;overflow:hidden;-webkit-font-smoothing:antialiased;}
+
+/* ── Deck Shell ── */
+#deck{position:relative;width:100%;height:100%;}
+.slide{position:absolute;inset:0;opacity:0;pointer-events:none;
+  transform:translateX(50px);
+  transition:opacity 0.4s cubic-bezier(.25,.46,.45,.94),transform 0.4s cubic-bezier(.25,.46,.45,.94);}
+.slide.active{opacity:1;pointer-events:all;transform:translateX(0);}
+.slide.exit-left{opacity:0;transform:translateX(-50px);}
+.slide.exit-right{opacity:0;transform:translateX(50px);}
+
+/* ── Scroll wrapper inside slides ── */
+.scroll-body{
+  position:absolute;inset:0;bottom:72px;
+  overflow-y:auto;overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;
+  padding:24px 18px 12px;
+}
+@media(min-width:640px){.scroll-body{padding:32px 40px 16px;bottom:76px;}}
+
+/* ── Nav ── */
+#nav{position:fixed;bottom:0;left:0;right:0;
+  height:68px;background:rgba(10,10,10,0.96);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  padding:0 12px;z-index:100;overflow-x:auto;}
+@media(min-width:640px){height:72px;gap:10px;}
+.dot-wrap{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;
+  min-width:36px;flex-shrink:0;}
+.dot{width:6px;height:6px;border-radius:999px;background:rgba(255,255,255,0.18);
+  transition:all 0.28s ease;}
+.dot-wrap.active .dot{width:22px;background:var(--gold);}
+.dot-label{font-size:7px;letter-spacing:0.14em;text-transform:uppercase;
+  color:rgba(255,255,255,0.22);transition:color 0.25s;white-space:nowrap;}
+.dot-wrap.active .dot-label{color:var(--gold);}
+
+/* Arrows - hidden on mobile, visible on tablet+ */
+#arrow-left,#arrow-right{
+  display:none;position:fixed;top:50%;transform:translateY(-50%);
+  width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,0.1);
+  background:transparent;color:rgba(255,255,255,0.25);font-size:14px;
+  cursor:pointer;z-index:100;align-items:center;justify-content:center;transition:all 0.2s;}
+@media(min-width:640px){#arrow-left,#arrow-right{display:flex;}}
+#arrow-left:hover,#arrow-right:hover{border-color:rgba(255,255,255,0.3);color:rgba(255,255,255,0.7);}
+#arrow-left{left:10px;}#arrow-right{right:10px;}
+#arrow-left:disabled,#arrow-right:disabled{opacity:0;pointer-events:none;}
+
+/* Swipe hint */
+#swipe-hint{position:fixed;bottom:76px;left:50%;transform:translateX(-50%);
+  font-size:9px;letter-spacing:0.16em;text-transform:uppercase;
+  color:rgba(255,255,255,0.18);pointer-events:none;z-index:99;padding:4px 10px;
+  background:rgba(10,10,10,0.7);border-radius:99px;}
+@media(min-width:640px){#swipe-hint{display:none;}}
+
+#counter{position:fixed;top:14px;right:16px;
+  font-family:monospace;font-size:10px;color:rgba(255,255,255,0.2);
+  letter-spacing:0.1em;z-index:100;}
+
+/* ── Shared Helpers ── */
+.eyebrow{font-size:10px;font-weight:600;letter-spacing:0.26em;
+  text-transform:uppercase;color:var(--gold);}
+.display{font-family:'DM Serif Display',serif;line-height:1.08;}
+.mono{font-family:'Bebas Neue',sans-serif;letter-spacing:0.04em;}
+.tag{display:inline-flex;align-items:center;gap:6px;border-radius:999px;
+  padding:4px 12px;font-size:9px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;}
+.tag-red{background:rgba(231,76,60,.12);border:1px solid rgba(231,76,60,.35);color:var(--red);}
+.tag-green{background:rgba(39,174,96,.1);border:1px solid rgba(39,174,96,.3);color:var(--green);}
+.tag-gold{background:rgba(212,160,23,.12);border:1px solid rgba(212,160,23,.35);color:var(--gold);}
+.card{border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,0.025);}
+.row-item{display:flex;align-items:center;justify-content:space-between;
+  padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:rgba(255,255,255,0.02);}
+.section-title{font-size:9px;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;
+  color:rgba(255,255,255,0.3);margin-bottom:10px;margin-top:20px;}
+.section-title:first-child{margin-top:0;}
+.pulse{animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.footnote{font-size:9px;color:rgba(255,255,255,0.2);margin-top:16px;line-height:1.5;}
+.footnote sup{color:var(--gold);}
+.divider{height:1px;background:var(--border);margin:16px 0;}
+
+/* ── Texas flag stripe ── */
+.tx-stripe{height:3px;width:100%;background:linear-gradient(90deg,var(--tx-blue) 0%,var(--tx-blue) 33%,var(--tx-red) 33%,var(--tx-red) 66%,#fff 66%);}
+
+/* ── S1: Cover ── */
+#s1{background:var(--dark);}
+#s1 .scroll-body{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;}
+.star-flag{font-size:52px;margin-bottom:12px;line-height:1;}
+#s1 h1{font-size:clamp(2rem,7vw,3.8rem);color:#fff;margin-bottom:6px;}
+#s1 h1 .gold{color:var(--gold);}
+#s1 .sub-name{font-size:clamp(1rem,3.5vw,1.6rem);color:var(--muted);margin-bottom:20px;font-family:'DM Serif Display',serif;font-style:italic;}
+#s1 .for-line{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.25);margin-bottom:28px;}
+.cover-pills{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:28px;}
+.pill{background:rgba(255,255,255,0.04);border:1px solid var(--border);
+  border-radius:999px;padding:6px 14px;font-size:11px;color:var(--muted);}
+.pill b{color:rgba(255,255,255,0.7);}
+.cover-note{font-size:11px;color:rgba(255,255,255,0.2);max-width:320px;line-height:1.6;text-align:center;}
+
+/* ── S2: Call Recap ── */
+#s2{background:#0D0D0D;}
+.recap-quote{background:rgba(212,160,23,0.06);border-left:3px solid var(--gold);
+  border-radius:0 8px 8px 0;padding:12px 14px;margin-bottom:10px;}
+.rq-speaker{font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:4px;}
+.rq-text{font-size:13px;color:rgba(255,255,255,0.75);line-height:1.55;font-family:'DM Serif Display',serif;font-style:italic;}
+.challenge-item{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+.challenge-item:last-child{border-bottom:none;}
+.ci-bullet{width:20px;height:20px;border-radius:50%;background:rgba(231,76,60,.15);
+  border:1px solid rgba(231,76,60,.3);display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;font-size:10px;color:var(--red);}
+.ci-text{flex:1;}
+.ci-label{font-size:12px;color:rgba(255,255,255,0.7);font-weight:600;margin-bottom:2px;}
+.ci-sub{font-size:11px;color:var(--muted);line-height:1.45;}
+.green-check{background:rgba(39,174,96,.15);border:1px solid rgba(39,174,96,.3);color:var(--green);}
+
+/* ── S3: The Problem Math ── */
+#s3{background:linear-gradient(160deg,#160a0a 0%,var(--dark) 60%);}
+#s3::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--red-dim),var(--red),var(--red-dim));}
+.big-stat{background:rgba(192,57,43,0.08);border:1px solid rgba(192,57,43,0.35);
+  border-radius:10px;padding:16px;margin-bottom:10px;}
+.bs-label{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--red);margin-bottom:4px;}
+.bs-val{font-size:clamp(2rem,8vw,3.5rem);color:var(--red);line-height:1;}
+.bs-sub{font-size:11px;color:rgba(255,255,255,0.35);margin-top:4px;}
+.cost-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
+.cost-card{background:rgba(255,255,255,0.02);border:1px solid var(--border);
+  border-radius:8px;padding:12px;}
+.cc-label{font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;}
+.cc-val{font-size:16px;font-weight:700;color:var(--red);}
+.cc-sub{font-size:10px;color:rgba(255,255,255,0.25);margin-top:3px;line-height:1.4;}
+
+/* ── S4: Economics ── */
+#s4{background:#0D0D0D;}
+.econ-row{display:flex;justify-content:space-between;align-items:center;
+  padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+.econ-row:last-child{border-bottom:none;}
+.er-label{font-size:12px;color:var(--muted);}
+.er-note{font-size:10px;color:rgba(255,255,255,0.2);margin-top:1px;}
+.er-val{font-size:14px;font-weight:700;text-align:right;}
+.er-pos{color:rgba(255,255,255,0.8);}
+.er-neg{color:var(--red);}
+.contribution-box{background:rgba(212,160,23,0.08);border:1px solid rgba(212,160,23,0.3);
+  border-radius:10px;padding:14px 16px;margin:12px 0;}
+.cb-label{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:4px;}
+.cb-val{font-size:clamp(1.6rem,6vw,2.6rem);color:var(--gold);}
+.cb-sub{font-size:10px;color:rgba(255,255,255,0.3);margin-top:2px;}
+
+/* ── S5 & S6: Compare ── */
+#s5{background:linear-gradient(160deg,#160a0a 0%,var(--dark) 60%);}
+#s5::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--red-dim),var(--red),var(--red-dim));}
+#s6{background:linear-gradient(160deg,#051208 0%,var(--dark) 60%);}
+#s6::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--green-dim),var(--green),var(--green-dim));}
+.dep-box{border-radius:10px;padding:14px 16px;margin-bottom:12px;
+  display:flex;justify-content:space-between;align-items:center;}
+.dep-box-red{background:rgba(192,57,43,0.1);border:1px solid rgba(192,57,43,0.4);}
+.dep-box-green{background:rgba(39,174,96,0.08);border:1px solid rgba(39,174,96,0.3);}
+.dep-label{font-size:9px;letter-spacing:0.18em;text-transform:uppercase;margin-bottom:3px;}
+.dep-val{font-size:clamp(1.6rem,6vw,2.4rem);}
+.badge{font-size:8px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;
+  padding:4px 10px;border-radius:4px;}
+.badge-red{background:var(--red-dim);color:#fff;}
+.badge-green{background:var(--green-dim);color:#fff;}
+.result-box{border-radius:10px;padding:14px 16px;margin-top:10px;}
+.result-box-red{background:rgba(192,57,43,0.08);border:1px solid rgba(192,57,43,0.28);}
+.result-box-green{background:rgba(39,174,96,0.08);border:1px solid rgba(39,174,96,0.25);}
+.stg-mini{background:rgba(212,160,23,0.05);border:1px solid rgba(212,160,23,0.2);
+  border-radius:8px;margin-bottom:10px;overflow:hidden;}
+.stg-line{display:flex;justify-content:space-between;padding:7px 12px;
+  border-bottom:1px solid rgba(255,255,255,0.04);font-size:11px;}
+.stg-line:last-child{border-bottom:none;}
+.stg-total{display:flex;justify-content:space-between;padding:9px 12px;
+  background:rgba(212,160,23,0.08);border-top:1px solid rgba(212,160,23,0.25);
+  font-size:12px;font-weight:700;color:var(--gold);}
+
+/* ── S7: ROI Table ── */
+#s7{background:var(--dark);}
+.ct{width:100%;border-radius:10px;overflow:hidden;border:1px solid var(--border);}
+.ct-hrow{display:grid;grid-template-columns:1.2fr 1fr 1fr;
+  background:rgba(255,255,255,0.03);border-bottom:1px solid var(--border);}
+.ct-h{padding:8px 10px;font-size:8px;letter-spacing:0.16em;text-transform:uppercase;}
+.ct-ha{color:var(--red);border-left:1px solid var(--border);text-align:center;}
+.ct-hb{color:var(--green);border-left:1px solid var(--border);text-align:center;}
+.ct-row{display:grid;grid-template-columns:1.2fr 1fr 1fr;
+  border-bottom:1px solid rgba(255,255,255,0.04);}
+.ct-row:last-child{border-bottom:none;}
+.ct-row:nth-child(even){background:rgba(255,255,255,0.015);}
+.ct-cell{padding:9px 10px;font-size:11px;}
+.ct-label-cell{color:rgba(255,255,255,0.5);font-size:11px;}
+.ct-a-cell{text-align:center;border-left:1px solid rgba(255,255,255,0.04);color:rgba(231,76,60,0.8);font-weight:600;}
+.ct-b-cell{text-align:center;border-left:1px solid rgba(255,255,255,0.04);color:var(--green);font-weight:700;}
+.ct-neutral{color:var(--gold) !important;}
+.roi-3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px;}
+.roi-card{border-radius:9px;padding:12px;text-align:center;}
+.roi-card-gold{background:rgba(212,160,23,0.08);border:1px solid rgba(212,160,23,0.28);}
+.roi-card-green{background:rgba(39,174,96,0.07);border:1px solid rgba(39,174,96,0.22);}
+.roi-card-mid{background:rgba(255,255,255,0.02);border:1px solid var(--border);}
+.rc-label{font-size:8px;letter-spacing:0.16em;text-transform:uppercase;margin-bottom:6px;}
+.rc-val{font-size:clamp(1.2rem,4.5vw,1.8rem);font-weight:700;}
+.rc-sub{font-size:9px;color:var(--muted);margin-top:3px;}
+
+/* ── S8: Program ── */
+#s8{background:#0D0D0D;}
+.phase-card{border-radius:9px;padding:12px 14px;margin-bottom:8px;}
+.phase-card-done{background:rgba(39,174,96,0.06);border:1px solid rgba(39,174,96,0.2);}
+.phase-card-now{background:rgba(212,160,23,0.08);border:1px solid rgba(212,160,23,0.3);}
+.phase-card-next{background:rgba(255,255,255,0.02);border:1px solid var(--border);}
+.phase-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;}
+.phase-name{font-size:13px;font-weight:600;color:#fff;}
+.phase-price{font-size:12px;font-weight:700;text-align:right;}
+.phase-desc{font-size:11px;color:var(--muted);line-height:1.5;}
+.phase-tag{font-size:8px;letter-spacing:0.14em;text-transform:uppercase;
+  padding:2px 8px;border-radius:3px;font-weight:700;margin-top:6px;display:inline-block;}
+.pt-done{background:rgba(39,174,96,0.2);color:var(--green);}
+.pt-now{background:rgba(212,160,23,0.2);color:var(--gold);}
+.pt-next{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.4);}
+.core-pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+.core-pill{background:rgba(255,255,255,0.04);border:1px solid var(--border);
+  border-radius:6px;padding:5px 10px;font-size:10px;color:var(--muted);}
+.core-pill b{color:rgba(255,255,255,0.65);}
+.timeline-row{display:flex;gap:0;border:1px solid var(--border);border-radius:8px;overflow:hidden;margin:10px 0;}
+.tl-block{flex:1;padding:10px 8px;text-align:center;border-right:1px solid var(--border);}
+.tl-block:last-child{border-right:none;}
+.tl-label{font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:3px;}
+.tl-val{font-size:11px;font-weight:600;color:#fff;line-height:1.3;}
+
+/* ── S9: Guarantee / OMG ── */
+#s9{background:var(--dark);}
+.omg-box{background:rgba(212,160,23,0.06);border:1px solid rgba(212,160,23,0.25);
+  border-radius:10px;padding:14px 16px;margin-bottom:10px;}
+.omg-title{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;}
+.omg-row{display:flex;gap:10px;align-items:flex-start;padding:7px 0;
+  border-bottom:1px solid rgba(255,255,255,0.04);}
+.omg-row:last-child{border-bottom:none;}
+.omg-icon{font-size:14px;flex-shrink:0;width:20px;text-align:center;}
+.omg-text{font-size:11px;color:rgba(255,255,255,0.65);line-height:1.45;}
+.omg-text b{color:#fff;}
+.guarantee-box{background:rgba(39,174,96,0.07);border:1px solid rgba(39,174,96,0.25);
+  border-radius:10px;padding:14px 16px;margin-bottom:10px;}
+.policy-box{background:rgba(255,255,255,0.02);border:1px solid var(--border);
+  border-radius:8px;padding:12px 14px;margin-bottom:8px;}
+.policy-title{font-size:9px;letter-spacing:0.18em;text-transform:uppercase;
+  color:rgba(255,255,255,0.35);margin-bottom:6px;}
+.policy-item{display:flex;gap:8px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.03);}
+.policy-item:last-child{border-bottom:none;}
+.pi-bullet{color:var(--gold);font-size:10px;flex-shrink:0;margin-top:1px;}
+.pi-text{font-size:11px;color:var(--muted);line-height:1.4;}
+.pi-text b{color:rgba(255,255,255,0.65);}
+
+/* ── S10: Case Studies / Refs ── */
+#s10{background:#0D0D0D;}
+.case-card{background:rgba(39,174,96,0.05);border:1px solid rgba(39,174,96,0.2);
+  border-radius:10px;padding:14px 16px;margin-bottom:10px;}
+.case-company{font-size:14px;font-weight:700;color:#fff;margin-bottom:2px;}
+.case-location{font-size:10px;color:var(--muted);margin-bottom:8px;}
+.case-stat-row{display:flex;gap:8px;margin-bottom:8px;}
+.case-stat{flex:1;background:rgba(255,255,255,0.03);border-radius:6px;padding:8px;text-align:center;}
+.cs-label{font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:3px;}
+.cs-val{font-size:15px;font-weight:700;}
+.cs-val-red{color:var(--red);}
+.cs-val-green{color:var(--green);}
+.case-desc{font-size:11px;color:var(--muted);line-height:1.5;}
+.case-desc b{color:rgba(255,255,255,0.7);}
+.ref-card{background:rgba(255,255,255,0.02);border:1px solid var(--border);
+  border-radius:9px;padding:12px 14px;margin-bottom:8px;}
+.ref-name{font-size:13px;font-weight:600;color:#fff;margin-bottom:2px;}
+.ref-loc{font-size:10px;color:var(--muted);margin-bottom:6px;}
+.ref-desc{font-size:11px;color:var(--muted);line-height:1.45;}
+.ref-desc b{color:rgba(255,255,255,0.65);}
+
+/* ── S11: Decision ── */
+#s11{background:var(--dark);}
+.objection-card{background:rgba(231,76,60,0.06);border:1px solid rgba(231,76,60,0.2);
+  border-radius:10px;padding:14px 16px;margin-bottom:12px;}
+.oc-quote{font-size:clamp(1.1rem,4.5vw,1.6rem);font-family:'DM Serif Display',serif;
+  color:#fff;margin-bottom:6px;}
+.oc-quote span{color:var(--red);}
+.oc-reframe{font-size:12px;color:var(--muted);line-height:1.55;}
+.oc-reframe b{color:rgba(255,255,255,0.75);}
+.oc-reframe .g{color:var(--green);}
+.oc-reframe .gold{color:var(--gold);}
+.truth-row{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+.truth-row:last-child{border-bottom:none;}
+.tr-num{font-size:18px;color:var(--gold);flex-shrink:0;width:24px;font-family:'Bebas Neue',sans-serif;}
+.tr-body{}
+.tr-title{font-size:12px;font-weight:600;color:rgba(255,255,255,0.85);margin-bottom:2px;}
+.tr-text{font-size:11px;color:var(--muted);line-height:1.45;}
+.final-card{background:linear-gradient(135deg,rgba(39,174,96,0.08),rgba(212,160,23,0.06));
+  border:1px solid rgba(212,160,23,0.25);border-radius:10px;padding:16px;margin-top:12px;}
+.fc-text{font-family:'DM Serif Display',serif;font-style:italic;
+  font-size:clamp(12px,3.5vw,15px);color:rgba(255,255,255,0.7);line-height:1.65;}
+.fc-text .w{color:#fff;}
+.fc-text .g{color:var(--green);}
+.fc-text .gold{color:var(--gold);}
+</style>
+</head>
+<body>
+<div id="deck">
+
+<!-- ── S1: COVER ── -->
+<div class="slide active" id="s1">
+  <div class="scroll-body" style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
+    <div class="tx-stripe" style="position:absolute;top:0;left:0;right:0;"></div>
+    <div class="star-flag">⭐</div>
+    <p class="eyebrow" style="margin-bottom:10px">Follow-Up · February 2026</p>
+    <h1 class="display">Texas Star <span class="gold">Roofing</span></h1>
+    <p class="sub-name">A Custom Proposal from STG</p>
+    <p class="for-line">Prepared for J. Williams &amp; Leadership</p>
+    <div class="cover-pills">
+      <span class="pill">🏠 <b>Residential</b> + Commercial</span>
+      <span class="pill">📍 <b>DFW</b>, Texas</span>
+      <span class="pill">⚡ <b>Storm Season</b> starts April</span>
+    </div>
+    <p class="cover-note">Based on your call with STG — here's why the decision you make in February will determine what April looks like.</p>
+  </div>
+</div>
+
+<!-- ── S2: CALL RECAP ── -->
+<div class="slide" id="s2">
+  <div class="scroll-body">
+    <p class="eyebrow" style="margin-bottom:12px">What We Heard on the Call</p>
+    <h2 class="display" style="font-size:clamp(1.5rem,5.5vw,2.4rem);color:#fff;margin-bottom:14px">Where Texas Star Is Right Now</h2>
+
+    <p class="section-title">Things J Said That Were 100% on Point</p>
+    <div class="card" style="padding:4px 12px;">
+      <div class="challenge-item">
+        <div class="ci-bullet green-check">✓</div>
+        <div class="ci-text"><div class="ci-label">"We need more reps"</div><div class="ci-sub">3 new hires targeted. Each expected to hit $1M/year on a residential replacement model.</div></div>
+      </div>
+      <div class="challenge-item">
+        <div class="ci-bullet green-check">✓</div>
+        <div class="ci-text"><div class="ci-label">Owner knows how to sell</div><div class="ci-sub">That's the exact trap — and J sees it. The business was built on personal production, not systems.</div></div>
+      </div>
+      <div class="challenge-item">
+        <div class="ci-bullet green-check">✓</div>
+        <div class="ci-text"><div class="ci-label">Storm season is April</div><div class="ci-sub">90 days from now. New reps need to be hired, onboarded, and ramped <em>before</em> the storm hits — not after.</div></div>
+      </div>
+    </div>
+
+    <p class="section-title">The Objections We Need to Address</p>
+    <div class="card" style="padding:4px 12px;">
+      <div class="challenge-item">
+        <div class="ci-bullet" style="background:rgba(231,76,60,.15);border-color:rgba(231,76,60,.3);">!</div>
+        <div class="ci-text">
+          <div class="ci-label">"I'm not paying $8,500/mo for reps"</div>
+          <div class="ci-sub">The <b>Platinum Fractional VP</b> isn't paid per rep. It's a fixed coaching investment that <b>protects all three</b> of them — and yourself. This deck answers that objection with math.</div>
+        </div>
+      </div>
+      <div class="challenge-item">
+        <div class="ci-bullet" style="background:rgba(231,76,60,.15);border-color:rgba(231,76,60,.3);">!</div>
+        <div class="ci-text">
+          <div class="ci-label">"We'll train them ourselves"</div>
+          <div class="ci-sub">Industry turnover for self-trained reps is <b>60%+ within 12 months</b>. Without structure, the owner becomes the trainer — and stops generating revenue.</div>
+        </div>
+      </div>
+      <div class="challenge-item">
+        <div class="ci-bullet" style="background:rgba(231,76,60,.15);border-color:rgba(231,76,60,.3);">!</div>
+        <div class="ci-text">
+          <div class="ci-label">Sales Builder vs. Platinum confusion</div>
+          <div class="ci-sub">Sales Builder coaches the <b>leader</b> to coach the team. Platinum means <b>STG is the coach</b> — directly with reps weekly. With 3 new hires, only one of those works right now.</div>
+        </div>
+      </div>
+    </div>
+    <div class="footnote"><sup>1</sup> Sales rep turnover: Bureau of Labor Statistics + Bridge Group SaaS benchmarks. Roofing industry D2D rep attrition typically exceeds 55–65% in year one without structured onboarding. <sup>2</sup> Based on STG client cohort data across 200+ roofing companies.</div>
+  </div>
+</div>
+
+<!-- ── S3: THE REAL COST OF DOING IT ALONE ── -->
+<div class="slide" id="s3">
+  <div class="scroll-body">
+    <span class="tag tag-red" style="margin-bottom:12px"><span class="pulse" style="width:5px;height:5px;border-radius:50%;background:var(--red);display:inline-block;"></span> The Hidden Investment</span>
+    <h2 class="display" style="font-size:clamp(1.4rem,5vw,2.2rem);color:#fff;margin-bottom:4px">"We'll Do It Ourselves" Isn't Free</h2>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:14px;">Every hiring and training path has a cost. The question is which one you control.</p>
+
+    <div class="big-stat">
+      <div class="bs-label">Industry Sales Rep Turnover Rate — Year 1¹</div>
+      <div class="bs-val mono">60%</div>
+      <div class="bs-sub">6 out of 10 reps hired without structure are gone within 12 months</div>
+    </div>
+
+    <p class="section-title">What It Actually Costs to DIY 3 Reps</p>
+    <div class="cost-grid">
+      <div class="cost-card">
+        <div class="cc-label">Owner Time — Training</div>
+        <div class="cc-val">~300 hrs</div>
+        <div class="cc-sub">~2 hrs/day × 5 days × 30 weeks per rep</div>
+      </div>
+      <div class="cost-card">
+        <div class="cc-label">Owner Opp. Cost²</div>
+        <div class="cc-val">$150K+</div>
+        <div class="cc-sub">Lost production while owner isn't selling</div>
+      </div>
+      <div class="cost-card">
+        <div class="cc-label">Underperforming Rep</div>
+        <div class="cc-val">$210K</div>
+        <div class="cc-sub">At 30% hit rate, expected shortfall per rep vs $1M goal</div>
+      </div>
+      <div class="cost-card">
+        <div class="cc-label">Re-Hire Cost if Lost</div>
+        <div class="cc-val">$8–15K</div>
+        <div class="cc-sub">Per replacement (ads, time, onboard) — × 60% probability</div>
+      </div>
+    </div>
+
+    <div class="card" style="padding:12px 14px;">
+      <div style="font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">The Real Question Isn't "Can We Afford STG?"</div>
+      <p style="font-size:13px;color:#fff;font-family:'DM Serif Display',serif;font-style:italic;line-height:1.5;">"Can we afford to spend 300 hours training people who have a 60% chance of leaving — and still not hit a million dollars each?"</p>
+    </div>
+    <div class="footnote"><sup>1</sup> BLS + roofing industry benchmarks. <sup>2</sup> Owner opportunity cost estimated at $500K–$1M+ personal production capacity in active storm markets.</div>
+  </div>
+</div>
+
+<!-- ── S4: SHARED ECONOMICS ── -->
+<div class="slide" id="s4">
+  <div class="scroll-body">
+    <p class="eyebrow" style="margin-bottom:10px">The Numbers — Same in Both Scenarios</p>
+    <h2 class="display" style="font-size:clamp(1.4rem,5vw,2.2rem);color:#fff;margin-bottom:4px">The Math Starts Here</h2>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:14px;">3 reps × $1M each = $3M added revenue. These inputs don't change.</p>
+
+    <div class="card" style="padding:4px 16px;">
+      <div class="econ-row">
+        <div><div class="er-label">Added Revenue</div><div class="er-note">3 reps × $1M — on run-rate trajectory</div></div>
+        <div class="er-val er-pos mono">$3,000,000</div>
+      </div>
+      <div class="econ-row">
+        <div><div class="er-label">Cost of Goods (65%)</div><div class="er-note">Materials, labor, subs, disposal</div></div>
+        <div class="er-val er-neg mono">−$1,950,000</div>
+      </div>
+      <div class="econ-row">
+        <div><div class="er-label">Gross Profit (35%)</div><div class="er-note">What's left before sales costs</div></div>
+        <div class="er-val er-pos mono">$1,050,000</div>
+      </div>
+      <div class="econ-row">
+        <div><div class="er-label">Commissions (10% DFW)</div><div class="er-note">100% commission — 1099</div></div>
+        <div class="er-val er-neg mono">−$300,000</div>
+      </div>
+    </div>
+
+    <div class="contribution-box">
+      <div class="cb-label">Contribution Margin Available</div>
+      <div class="cb-val mono">$750,000</div>
+      <div class="cb-sub">This is the pool. How much of it you actually capture depends on what comes next →</div>
+    </div>
+
+    <div class="row-item" style="margin-top:4px;">
+      <div style="font-size:12px;color:var(--muted);">Gross Profit ROI on $3M revenue</div>
+      <div style="font-size:15px;font-weight:700;color:var(--gold);" class="mono">35%</div>
+    </div>
+    <div class="row-item" style="margin-top:8px;">
+      <div style="font-size:12px;color:var(--muted);">EBITDA at 10% — if fully hit</div>
+      <div style="font-size:15px;font-weight:700;color:#fff;" class="mono">$300,000</div>
+    </div>
+    <div class="footnote" style="margin-top:10px;"><sup>3</sup> 35% gross margin consistent with DFW residential replacement roofing. Commission at 10% is mid-range for 100% commission models in this market (range: 8–12%).</div>
+  </div>
+</div>
+
+<!-- ── S5: SCENARIO A — NO COACHING ── -->
+<div class="slide" id="s5">
+  <div class="scroll-body">
+    <span class="tag tag-red" style="margin-bottom:12px"><span class="pulse" style="width:5px;height:5px;border-radius:50%;background:var(--red);display:inline-block;"></span>Scenario A · No STG</span>
+    <h2 class="display" style="font-size:clamp(1.4rem,5vw,2.2rem);color:#fff;margin-bottom:4px">Owner Dependency <span style="color:var(--red);">Above 35%</span></h2>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">No sales system. No coaching. You're the trainer, the closer, and the coach.</p>
+
+    <div class="dep-box dep-box-red">
+      <div><div class="dep-label" style="color:var(--red);">Owner Dependency</div><div class="dep-val mono" style="color:var(--red);">35%+</div></div>
+      <span class="badge badge-red">⚠ HIGH RISK</span>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:7px;margin-bottom:10px;">
+      <div class="row-item" style="border-left:2px solid var(--red);">
+        <div><div style="font-size:12px;color:rgba(231,76,60,0.85);">Probability of Reps Hitting Goal</div><div style="font-size:10px;color:rgba(255,255,255,0.2);margin-top:1px;">60% turnover + no process = low conversion</div></div>
+        <div class="mono" style="font-size:22px;color:var(--red);">30%</div>
+      </div>
+      <div class="row-item">
+        <div><div style="font-size:12px;color:var(--muted);">Expected Revenue Realized</div><div style="font-size:10px;color:rgba(255,255,255,0.2);margin-top:1px;">$3M × 30%</div></div>
+        <div class="mono" style="font-size:16px;color:rgba(255,255,255,0.7);">$900,000</div>
+      </div>
+      <div class="row-item">
+        <div><div style="font-size:12px;color:var(--muted);">Expected Gross Profit</div><div style="font-size:10px;color:rgba(255,255,255,0.2);margin-top:1px;">$900K × 35%</div></div>
+        <div class="mono" style="font-size:16px;color:rgba(255,255,255,0.7);">$315,000</div>
+      </div>
+      <div class="row-item" style="border-left:2px solid var(--red);">
+        <div><div style="font-size:12px;color:rgba(231,76,60,0.85);">Expected EBITDA (10%)</div><div style="font-size:10px;color:rgba(255,255,255,0.2);margin-top:1px;">After overhead</div></div>
+        <div class="mono" style="font-size:16px;color:var(--red);">$90,000</div>
+      </div>
+      <div class="row-item">
+        <div><div style="font-size:12px;color:var(--muted);">STG Investment</div></div>
+        <div class="mono" style="font-size:16px;color:rgba(255,255,255,0.4);">$0</div>
+      </div>
+    </div>
+
+    <div class="result-box result-box-red">
+      <div style="font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--red);margin-bottom:4px;">Valuation Gain · 4.5× Multiple</div>
+      <div class="mono" style="font-size:clamp(1.8rem,6vw,2.6rem);color:var(--red);">$405,000</div>
+      <div style="font-size:10px;color:rgba(255,255,255,0.25);margin-top:3px;">$90K EBITDA × 4.5× — owner-dependent companies command lower multiples</div>
+      <div class="divider" style="margin:10px 0;"></div>
+      <div style="font-size:10px;color:rgba(255,255,255,0.35);">Gross Profit ROI on revenue: <b style="color:rgba(255,255,255,0.5);">$315K</b> · Revenue ROI: <b style="color:rgba(255,255,255,0.5);">only $900K of $3M realized</b></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── S6: SCENARIO B — WITH STG ── -->
+<div class="slide" id="s6">
+  <div class="scroll-body">
+    <span class="tag tag-green" style="margin-bottom:12px"><span style="width:5px;height:5px;border-radius:50%;background:var(--green);display:inline-block;"></span>Scenario B · With STG Platinum</span>
+    <h2 class="display" style="font-size:clamp(1.4rem,5vw,2.2rem);color:#fff;margin-bottom:4px">Owner Dependency <span style="color:var(--green);">Reduced to 5%</span></h2>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">STG is the coach. You run the company. Reps get a proven system from day one.</p>
+
+    <div class="dep-box dep-box-green">
+      <div><div class="dep-label" style="color:var(--green);">Owner Dependency</div><div class="dep-val mono" style="color:var(--green);">5%</div></div>
+      <span class="badge badge-green">✓ RESOLVED</span>
+    </div>
+
+    <div class="stg-mini">
+      <div style="font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);padding:9px 12px 4px;">STG Investment — Year 1 Total</div>
+      <div class="stg-line"><span style="color:var(--muted);">Phase 1 — Sales Launch (×3 reps)</span><span style="color:rgba(255,255,255,0.65);font-weight:600;">$19,800</span></div>
+      <div class="stg-line"><span style="color:var(--muted);">Phase 2 — Team Kickoff</span><span style="color:rgba(255,255,255,0.65);font-weight:600;">$5,000</span></div>
+      <div class="stg-line"><span style="color:var(--muted);">Platinum Fractional VP (×12 mo)</span><span style="color:rgba(255,255,255,0.65);font-weight:600;">$102,000</span></div>
+      <div class="stg-line"><span style="color:var(--muted);">Core Programs — CORP (×12 mo)</span><span style="color:rgba(255,255,255,0.65);font-weight:600;">$10,800</span></div>
+      <div class="stg-line"><span style="color:var(--muted);">OMG Licenses (×3 reps)</span><span style="color:rgba(255,255,255,0.65);font-weight:600;">$6,750</span></div>
+      <div class="stg-total"><span>Total Year 1</span><span>$144,350</span></div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:7px;margin-bottom:8px;">
+      <div class="row-item" style="border-left:2px solid var(--green);">
+        <div><div style="font-size:12px;color:var(--green);">Probability of Reps Hitting Goal</div><div style="font-size:10px;color:rgba(255,255,255,0.2);margin-top:1px;">Structured onboarding + weekly coaching</div></div>
+        <div class="mono" style="font-size:22px;color:var(--green);">92%</div>
+      </div>
+      <div class="row-item">
+        <div><div style="font-size:12px;color:var(--muted);">Expected Revenue Realized</div><div style="font-size:10px;color:rgba(255,255,255,0.2);margin-top:1px;">$3M × 92%</div></div>
+        <div class="mono" style="font-size:16px;color:rgba(255,255,255,0.75);">$2,760,000</div>
+      </div>
+      <div class="row-item">
+        <div><div style="font-size:12px;color:var(--muted);">Expected Gross Profit</div><div style="font-size:10px;color:rgba(255,255,255,0.2);margin-top:1px;">$2.76M × 35%</div></div>
+        <div class="mono" style="font-size:16px;color:rgba(255,255,255,0.75);">$966,000</div>
+      </div>
+      <div class="row-item" style="border-left:2px solid var(--green);">
+        <div><div style="font-size:12px;color:var(--green);">Expected EBITDA (10%)</div><div style="font-size:10px;color:rgba(255,255,255,0.2);margin-top:1px;">Before STG cost</div></div>
+        <div class="mono" style="font-size:16px;color:var(--green);">$276,000</div>
+      </div>
+      <div class="row-item" style="border-left:2px solid var(--red);">
+        <div><div style="font-size:12px;color:rgba(231,76,60,0.8);">Less: STG Investment</div></div>
+        <div class="mono" style="font-size:16px;color:var(--red);">−$144,350</div>
+      </div>
+    </div>
+
+    <div class="result-box result-box-green">
+      <div style="font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--green);margin-bottom:4px;">Net EBITDA + Valuation Gain · 6.5× Multiple</div>
+      <div class="mono" style="font-size:clamp(1.8rem,6vw,2.6rem);color:var(--green);">$855,725</div>
+      <div style="font-size:10px;color:rgba(255,255,255,0.25);margin-top:3px;">$131,650 net EBITDA × 6.5× — systematized companies command premium multiples</div>
+      <div class="divider" style="margin:10px 0;"></div>
+      <div style="font-size:10px;color:rgba(255,255,255,0.35);">Gross Profit ROI: <b style="color:rgba(255,255,255,0.5);">$966K</b> · Revenue ROI on STG: <b style="color:var(--green);">$2.76M realized of $3M possible</b></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── S7: SIDE-BY-SIDE ROI ── -->
+<div class="slide" id="s7">
+  <div class="scroll-body">
+    <p class="eyebrow" style="margin-bottom:10px">Year One · Side by Side</p>
+    <h2 class="display" style="font-size:clamp(1.4rem,5vw,2.2rem);color:#fff;margin-bottom:14px">What $144,350 Buys You</h2>
+
+    <div class="ct">
+      <div class="ct-hrow">
+        <div class="ct-h"></div>
+        <div class="ct-h ct-ha">No STG</div>
+        <div class="ct-h ct-hb">With STG</div>
+      </div>
+      <div class="ct-row"><div class="ct-cell ct-label-cell">Prob. of Success</div><div class="ct-cell ct-a-cell">30%</div><div class="ct-cell ct-b-cell">92%</div></div>
+      <div class="ct-row"><div class="ct-cell ct-label-cell">Expected Revenue</div><div class="ct-cell ct-a-cell">$900K</div><div class="ct-cell ct-b-cell">$2.76M</div></div>
+      <div class="ct-row"><div class="ct-cell ct-label-cell">Gross Profit</div><div class="ct-cell ct-a-cell">$315K</div><div class="ct-cell ct-b-cell">$966K</div></div>
+      <div class="ct-row"><div class="ct-cell ct-label-cell">STG Investment</div><div class="ct-cell ct-a-cell ct-neutral">$0</div><div class="ct-cell ct-b-cell ct-neutral">−$144K</div></div>
+      <div class="ct-row"><div class="ct-cell ct-label-cell">Net EBITDA</div><div class="ct-cell ct-a-cell">$90K</div><div class="ct-cell ct-b-cell">$131K</div></div>
+      <div class="ct-row"><div class="ct-cell ct-label-cell">Multiple</div><div class="ct-cell ct-a-cell">4.5×</div><div class="ct-cell ct-b-cell">6.5×</div></div>
+      <div class="ct-row" style="background:rgba(255,255,255,0.02);">
+        <div class="ct-cell ct-label-cell" style="font-weight:600;color:rgba(255,255,255,0.7);">Valuation Gain</div>
+        <div class="ct-cell ct-a-cell" style="font-size:13px;">$405K</div>
+        <div class="ct-cell ct-b-cell" style="font-size:13px;">$855K</div>
+      </div>
+    </div>
+
+    <div class="roi-3">
+      <div class="roi-card roi-card-gold">
+        <div class="rc-label" style="color:var(--gold);">Val. Lift</div>
+        <div class="rc-val mono" style="color:var(--gold);">+$450K</div>
+        <div class="rc-sub">$855K−$405K</div>
+      </div>
+      <div class="roi-card roi-card-green">
+        <div class="rc-label" style="color:var(--green);">Year-1 ROI</div>
+        <div class="rc-val mono" style="color:var(--green);">312%</div>
+        <div class="rc-sub">$450K÷$144K</div>
+      </div>
+      <div class="roi-card roi-card-mid">
+        <div class="rc-label" style="color:rgba(255,255,255,0.4);">GP Gain</div>
+        <div class="rc-val mono" style="color:#fff;">+$651K</div>
+        <div class="rc-sub">$966K−$315K</div>
+      </div>
+    </div>
+
+    <div class="card" style="padding:12px 14px;margin-top:10px;">
+      <p style="font-size:11px;color:var(--muted);line-height:1.55;">This is <b style="color:#fff;">one year</b> and <b style="color:#fff;">one class of reps only</b>. Once the systems, materials, and process are built — they're built. Future hires benefit from everything without rebuilding from scratch.</p>
+    </div>
+    <div class="footnote"><sup>4</sup> Valuation multiples: 4.5× owner-dependent, 6.5× systematized. Based on roofing industry M&amp;A data and EBITDA-based business valuation norms for specialty contractors with &lt;$20M revenue.</div>
+  </div>
+</div>
+
+<!-- ── S8: THE PROGRAM ── -->
+<div class="slide" id="s8">
+  <div class="scroll-body">
+    <p class="eyebrow" style="margin-bottom:10px">The Recommended Program</p>
+    <h2 class="display" style="font-size:clamp(1.4rem,5vw,2.2rem);color:#fff;margin-bottom:4px">What We're Proposing for Texas Star</h2>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:14px;">Start Platinum now. Be storm-ready in 90 days. Reassess at 6 months.</p>
+
+    <div class="timeline-row">
+      <div class="tl-block"><div class="tl-label">Now → April</div><div class="tl-val">Hire &amp; Ramp</div></div>
+      <div class="tl-block"><div class="tl-label">90 Days</div><div class="tl-val">Hitting Stride</div></div>
+      <div class="tl-block"><div class="tl-label">6 Months</div><div class="tl-val">Reassess Platinum</div></div>
+      <div class="tl-block"><div class="tl-label">12 Months</div><div class="tl-val">$3M+ Realized</div></div>
+    </div>
+
+    <p class="section-title">Phase Roadmap</p>
+    <div class="phase-card phase-card-now">
+      <div class="phase-top">
+        <div class="phase-name">Phase 1 — Sales Launch</div>
+        <div class="phase-price" style="color:var(--gold);">$6,600 / rep</div>
+      </div>
+      <div class="phase-desc">2-day in-office workshop: sales vision, KPIs, compensation plan, recruiting process. Sets the foundation all three reps will be built on.</div>
+      <span class="phase-tag pt-now">Do This in February</span>
+    </div>
+    <div class="phase-card phase-card-now">
+      <div class="phase-top">
+        <div class="phase-name">Phase 2 — Team Kickoff</div>
+        <div class="phase-price" style="color:var(--gold);">$5,000</div>
+      </div>
+      <div class="phase-desc">2-day onsite with the full sales team. Motivation anchoring, assessment reviews, role play, baseline selling methodology. Rep-level adoption.</div>
+      <span class="phase-tag pt-now">When Team Is Onboard</span>
+    </div>
+    <div class="phase-card phase-card-now">
+      <div class="phase-top">
+        <div class="phase-name">Phase 3 — Platinum Fractional VP</div>
+        <div class="phase-price" style="color:var(--gold);">$8,500/mo</div>
+      </div>
+      <div class="phase-desc">STG is the active sales coach. Weekly team sales meetings, KPI delivery to ownership, monthly 1:1 with sales leader, Slack real-time coaching, monthly onsite.</div>
+      <span class="phase-tag pt-now">⭐ Recommended: 6 Months</span>
+    </div>
+
+    <p class="section-title">Core Programs Included</p>
+    <div class="core-pills">
+      <div class="core-pill">🏠 <b>Residential Sales Accelerator</b><br><span style="font-size:9px;">Weekly coaching for reps + leader + owner</span></div>
+      <div class="core-pill">🏢 <b>Commercial Sales Accelerator</b><br><span style="font-size:9px;">Optional — available if expanding commercial</span></div>
+      <div class="core-pill">🚪 <b>Roof Warrior (Door Knocking)</b><br><span style="font-size:9px;">Led by Ronnie &amp; Heath from AVCO</span></div>
+      <div class="core-pill">📋 <b>Sales Leader Accelerator</b><br><span style="font-size:9px;">For future team lead / hierarchy on your reps</span></div>
+    </div>
+    <p style="font-size:10px;color:rgba(255,255,255,0.25);margin-top:6px;">Core programs = 5 additional meetings/week for your team. <b style="color:rgba(255,255,255,0.4);">$900/mo</b> company-wide. <b style="color:var(--gold);">Waived with Platinum if signed in February.</b></p>
+
+    <div class="phase-card phase-card-next" style="margin-top:12px;">
+      <div class="phase-top">
+        <div class="phase-name">6-Month Option: Downgrade to Sales Builder</div>
+        <div class="phase-price" style="color:rgba(255,255,255,0.5);">$3,000/mo</div>
+      </div>
+      <div class="phase-desc">At 6 months, if you have a team lead in place who can carry coaching duties, you can move to Sales Builder. STG coaches the leader; leader coaches the team. <span style="color:rgba(255,255,255,0.5);">Note: with 3 new reps right now, this is not the right starting point.</span></div>
+      <span class="phase-tag pt-next">6-Month Reassessment</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── S9: GUARANTEE + TERMS ── -->
+<div class="slide" id="s9">
+  <div class="scroll-body">
+    <p class="eyebrow" style="margin-bottom:10px">Investment Protection</p>
+    <h2 class="display" style="font-size:clamp(1.4rem,5vw,2.2rem);color:#fff;margin-bottom:14px">We Put Skin in the Game Too</h2>
+
+    <div class="omg-box">
+      <div class="omg-title">🎯 OMG Licenses — Rock Stars Only</div>
+      <div class="omg-row">
+        <div class="omg-icon">📋</div>
+        <div class="omg-text"><b>3 licenses tailored specifically to Texas Star Roofing.</b> Custom job descriptions, KPI conversation plans, recruiting scripts, screening funnels, and automated assessments — built for your culture.</div>
+      </div>
+      <div class="omg-row">
+        <div class="omg-icon">🔒</div>
+        <div class="omg-text">One-time fee of <b>$6,750</b> covers all three licenses. We don't want just any rep — we want the right rep for your company specifically.</div>
+      </div>
+      <div class="omg-row">
+        <div class="omg-icon">🔄</div>
+        <div class="omg-text"><b>If a hire doesn't stay 6 months</b> (due to not hitting KPIs), we reopen the license. You're not left with an open seat and a sunk cost.</div>
+      </div>
+    </div>
+
+    <div class="guarantee-box">
+      <div style="font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--green);margin-bottom:8px;">✓ What the Guarantee Covers</div>
+      <p style="font-size:12px;color:rgba(255,255,255,0.65);line-height:1.55;">When you hire through our OMG system, you're hiring someone assessed against <b style="color:#fff;">21 selling competencies</b> calibrated to your role. The $6,750 investment doesn't just find people — it filters out the 60% who would have left anyway.</p>
+    </div>
+
+    <p class="section-title">Pricing Incentives — February Only</p>
+    <div class="policy-box">
+      <div class="policy-title">February Sign-Up Benefits</div>
+      <div class="policy-item"><span class="pi-bullet">★</span><div class="pi-text"><b>Core Programs ($900/mo) waived</b> for duration of Platinum enrollment</div></div>
+      <div class="policy-item"><span class="pi-bullet">★</span><div class="pi-text"><b>10% discount</b> on 6-month paid-in-full option</div></div>
+    </div>
+
+    <p class="section-title">2026 Agreement Terms (3-Strike Policy)</p>
+    <div class="policy-box">
+      <div class="policy-item"><span class="pi-bullet">→</span><div class="pi-text">Either party can cancel at any time — no long-term lock-in</div></div>
+      <div class="policy-item"><span class="pi-bullet">→</span><div class="pi-text">STG can cancel if client isn't providing deliverables needed for coaching to work</div></div>
+      <div class="policy-item"><span class="pi-bullet">→</span><div class="pi-text">Client can cancel if STG isn't delivering. <b>Three documented failures = exit without penalty</b></div></div>
+      <div class="policy-item"><span class="pi-bullet">→</span><div class="pi-text">Commitment goes both ways — we want partners, not contracts</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── S10: CASE STUDIES ── -->
+<div class="slide" id="s10">
+  <div class="scroll-body">
+    <p class="eyebrow" style="margin-bottom:10px">Proof It Works</p>
+    <h2 class="display" style="font-size:clamp(1.4rem,5vw,2.2rem);color:#fff;margin-bottom:14px">Real Results. Texas Companies.</h2>
+
+    <div class="case-card">
+      <div class="case-company">AVCO Roofing</div>
+      <div class="case-location">📍 Longview, TX · 8-Figure Company</div>
+      <div class="case-stat-row">
+        <div class="case-stat"><div class="cs-label">Previous Turnover</div><div class="cs-val cs-val-red mono">60%</div></div>
+        <div class="case-stat"><div class="cs-label">After STG</div><div class="cs-val cs-val-green mono">8%</div></div>
+      </div>
+      <div class="case-desc">Led by <b>Ronnie</b> — who also co-created the Roof Warrior door-knocking program inside STG's core courses. AVCO is in Close CRM. <b>Ronnie is happy to speak with J directly.</b></div>
+    </div>
+
+    <div class="case-card">
+      <div class="case-company">DT Commercial Roofing</div>
+      <div class="case-location">📍 Granbury, TX (DFW market) · Contact: Randy Hurtado</div>
+      <div class="case-stat-row">
+        <div class="case-stat"><div class="cs-label">Starting Point</div><div class="cs-val mono" style="color:rgba(255,255,255,0.6);">7-fig.</div></div>
+        <div class="case-stat"><div class="cs-label">After STG (Year 1)</div><div class="cs-val cs-val-green mono">High 7-fig.</div></div>
+      </div>
+      <div class="case-desc">DFW-based. Same market as Texas Star. <b>Randy Hurtado</b> can speak to the rep ramp process and what it looked like going from owner-dependent to systems-driven. Also in Close CRM.</div>
+    </div>
+
+    <p class="section-title">J Requested DFW References</p>
+    <div class="ref-card">
+      <div class="ref-name">Ronnie — AVCO Roofing</div>
+      <div class="ref-loc">Longview, TX · 8-figure · In Close CRM</div>
+      <div class="ref-desc">"Ask him what turnover looked like before STG vs now. And ask him about the Roof Warrior program his team helped build." — <b>Open to a call.</b></div>
+    </div>
+    <div class="ref-card">
+      <div class="ref-name">Randy Hurtado — DT Commercial Roofing</div>
+      <div class="ref-loc">Granbury, TX (DFW) · High 7-figure · In Close CRM</div>
+      <div class="ref-desc">"Same market, same challenges. Ask him what the first 90 days of structured onboarding looked like." — <b>Available as a reference.</b></div>
+    </div>
+    <div class="footnote"><sup>5</sup> Turnover statistics based on STG client data. Previous 60% / current 8% from AVCO Roofing engagement data. DT Roofing revenue growth based on reported results during STG engagement.</div>
+  </div>
+</div>
+
+<!-- ── S11: THE DECISION ── -->
+<div class="slide" id="s11">
+  <div class="scroll-body">
+    <p class="eyebrow" style="margin-bottom:12px">The Bottom Line</p>
+    <h2 class="display" style="font-size:clamp(1.4rem,5vw,2.2rem);color:#fff;margin-bottom:14px">Let's Address the Objection Directly</h2>
+
+    <div class="objection-card">
+      <div class="oc-quote">"I'm not paying <span>$8,500/mo</span> for reps."</div>
+      <div class="oc-reframe">
+        That's <b>$102,000/year</b> in coaching — for all three reps plus your leadership. It produces an expected <b class="g">$966,000</b> in gross profit and <b class="gold">$855,000</b> in valuation gain. Year one. Before compounding. And it costs less than the opportunity cost of <b>one rep not hitting their number</b>.
+      </div>
+    </div>
+
+    <div class="card" style="padding:4px 14px;">
+      <div class="truth-row">
+        <div class="tr-num">01</div>
+        <div class="tr-body"><div class="tr-title">You're not paying for reps. You're paying for certainty.</div><div class="tr-text">Without STG, 30% probability. With STG, 92%. That gap alone is worth $1.86M in expected revenue.</div></div>
+      </div>
+      <div class="truth-row">
+        <div class="tr-num">02</div>
+        <div class="tr-body"><div class="tr-title">The "do it yourself" path has a cost too.</div><div class="tr-text">300+ hours of owner time. Lost production. 60% attrition. Re-hire costs. None of that shows up on an invoice — but all of it shows up on your P&amp;L.</div></div>
+      </div>
+      <div class="truth-row">
+        <div class="tr-num">03</div>
+        <div class="tr-body"><div class="tr-title">The multiple matters as much as the EBITDA.</div><div class="tr-text">4.5× vs 6.5× is a 44% premium on exit value — before you even touch the EBITDA number. Systematized companies are worth more. Full stop.</div></div>
+      </div>
+      <div class="truth-row">
+        <div class="tr-num">04</div>
+        <div class="tr-body"><div class="tr-title">Storm season doesn't wait.</div><div class="tr-text">You need reps hired, onboarded, and ramped <b>before April</b>. That's 60 days. The only way that happens with three new people is if the system is already in place.</div></div>
+      </div>
+    </div>
+
+    <div class="final-card" style="margin-top:12px;">
+      <div class="fc-text">
+        "The hardest move in this business isn't going from <span class="w">$10M to $50M</span>. It's going from <span class="w">$3M to $10M</span> — because it requires something that doesn't come naturally: <span class="gold">relinquishing the reins</span>. Once the systems are built, they're built. You stop working <span class="g">in</span> the company and start working <span class="g">on</span> it. That's when valuation math changes permanently."
+      </div>
+    </div>
+
+    <div style="margin-top:14px;background:rgba(212,160,23,0.06);border:1px solid rgba(212,160,23,0.22);border-radius:9px;padding:12px 14px;">
+      <div style="font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;">Next Steps — February</div>
+      <div style="font-size:11px;color:rgba(255,255,255,0.55);line-height:1.6;">
+        ✓ Sign Platinum for 6 months in <b style="color:#fff;">February</b> → CORP programs waived<br>
+        ✓ Begin Phase 1 (Sales Launch) → kickoff before storm season<br>
+        ✓ OMG licenses built → hire rock stars, not warm bodies<br>
+        ✓ 6-month mark → assess whether Platinum → Sales Builder transition makes sense<br>
+        ✓ <b style="color:var(--gold);">April: Texas Star is storm-ready with a full ramped team</b>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /deck -->
+
+<!-- Controls -->
+<button id="arrow-left" onclick="go(current-1)">←</button>
+<button id="arrow-right" onclick="go(current+1)">→</button>
+<div id="nav"></div>
+<div id="counter">01/11</div>
+<div id="swipe-hint">← swipe →</div>
+
+<script>
+const SLIDES=['s1','s2','s3','s4','s5','s6','s7','s8','s9','s10','s11'];
+const LABELS=['Cover','Call Recap','Real Cost','Economics','No STG','With STG','ROI','Program','Guarantee','Case Studies','Decision'];
+let current=0;
+
+const nav=document.getElementById('nav');
+SLIDES.forEach((_,i)=>{
+  const w=document.createElement('button');
+  w.className='dot-wrap'+(i===0?' active':'');
+  w.style.cssText='background:none;border:none;cursor:pointer;padding:8px 0;';
+  w.innerHTML=`<span class="dot"></span><span class="dot-label">${LABELS[i]}</span>`;
+  w.onclick=()=>go(i);
+  nav.appendChild(w);
+});
+
+function go(next){
+  if(next<0||next>=SLIDES.length)return;
+  const prev=current;
+  const slides=document.querySelectorAll('.slide');
+  slides[prev].classList.remove('active');
+  slides[prev].classList.add(next>prev?'exit-left':'exit-right');
+  setTimeout(()=>slides[prev].classList.remove('exit-left','exit-right'),450);
+  slides[next].classList.add('active');
+  // scroll to top
+  const sb=slides[next].querySelector('.scroll-body');
+  if(sb)sb.scrollTop=0;
+  current=next;
+  document.querySelectorAll('.dot-wrap').forEach((d,i)=>d.classList.toggle('active',i===current));
+  const al=document.getElementById('arrow-left'),ar=document.getElementById('arrow-right');
+  al.disabled=current===0;ar.disabled=current===SLIDES.length-1;
+  document.getElementById('counter').textContent=
+    String(current+1).padStart(2,'0')+'/'+String(SLIDES.length).padStart(2,'0');
+  // hide swipe hint after first swipe
+  if(current>0)document.getElementById('swipe-hint').style.opacity='0';
+}
+
+// Keyboard
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key==='ArrowDown')go(current+1);
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp')go(current-1);
+});
+
+// Touch/swipe
+let touchStartX=0,touchStartY=0;
+document.addEventListener('touchstart',e=>{
+  touchStartX=e.touches[0].clientX;
+  touchStartY=e.touches[0].clientY;
+},{passive:true});
+document.addEventListener('touchend',e=>{
+  const dx=e.changedTouches[0].clientX-touchStartX;
+  const dy=Math.abs(e.changedTouches[0].clientY-touchStartY);
+  if(Math.abs(dx)>40&&dy<60){
+    if(dx<0)go(current+1);
+    else go(current-1);
+  }
+},{passive:true});
+
+// Init
+document.getElementById('arrow-left').disabled=true;
+</script>
+</body>
+</html>
